@@ -1,5 +1,4 @@
 import streamlit as st
-import time
 
 # --- APP CONFIG ---
 st.set_page_config(page_title="CRISPR-Bot Simulator", page_icon="🧬")
@@ -67,12 +66,12 @@ if st.session_state['grna_correct']:
     st.write("### 📍 Where does the GPS gRNA bind?")
     st.write("The gRNA binds to the sequence directly upstream of the final 'GG' landing pad.")
     
-    # Visualization with green line
+    # Visualization with green line matched specifically to the 20 bases before GG
     st.markdown("""
     ```text
-    DNA: C A G G C A T C G A T C G A T C G A T A T | G G |
-         |🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩|   ^ 
-         (------- 20 bp perfect match -------)   Landing Pad
+    DNA: C | A G G C A T C G A T C G A T C G A T A T | G G |
+           | 🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩 |   ^ 
+             (------- 20 bp perfect match -------)   Landing Pad
     ```
     """)
     
@@ -82,28 +81,17 @@ if st.session_state['grna_correct']:
     # Visualization with Scissors
     st.markdown("""
     ```text
-                                   ✂️ Cut site
-    DNA: C A G G C A T C G A T C G A T | C G A T A T | G G |
-         |🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩|   ^ 
-         (------- 20 bp perfect match -------)   Landing Pad
+                                       ✂️ Cut site
+    DNA: C | A G G C A T C G A T C G A T | C G A T A T | G G |
+           | 🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩 |   ^ 
+             (------- 20 bp perfect match -------)   Landing Pad
     ```
     """)
     
-    st.write("**Goal:** Use CRISPR to cut the DNA to trigger the 'switch' for healthy hemoglobin.")
-
-    if st.button("Execute CRISPR Cut"):
-        with st.spinner("🤖 CRISPR-Bot performing precision cut..."):
-            time.sleep(1.5) 
-            
-        st.success("✨ Great, you just cut your first gene!")
-        st.balloons()
-        
-        # Visualize the result showing the cut
-        cut_dna = dna_strand[:17] + "[✂️ CUT] " + dna_strand[17:]
-        st.markdown(f"**Updated Sequence Result:** `{cut_dna}`")
-        
-        # Store completion state to trigger the quiz
-        st.session_state['finished_sim'] = True
+    st.write("**The CRISPR cut the DNA to trigger the 'switch' for healthy hemoglobin.**")
+    
+    # Automatically unlock the quiz now that they've reached the end of the simulation
+    st.session_state['finished_sim'] = True
 
 # --- PART 2: THE QUIZ MODE ---
 if st.session_state.get('finished_sim'):
@@ -120,7 +108,8 @@ if st.session_state.get('finished_sim'):
         )
         
         q3 = st.radio(
-            "3. Based on clinical trials, this specific CRISPR edit helps the body:",["Turn off all DNA", "Restart production of hemoglobin", "Change the color of blood"]
+            "3. Based on clinical trials, this specific CRISPR edit helps the body:",
+            ["Turn off all DNA", "Restart production of hemoglobin", "Change the color of blood"]
         )
         
         submitted = st.form_submit_button("Submit Answers")
@@ -132,7 +121,14 @@ if st.session_state.get('finished_sim'):
             if q3 == "Restart production of hemoglobin": score += 1
             
             st.metric("Your STEM Score", f"{score}/3")
+            
+            # Display correct answers clearly after submission
+            st.markdown("### Answer Key:")
+            st.markdown(f"- **Q1:** BCL11A ✅ *(You answered: {q1})*")
+            st.markdown(f"- **Q2:** Because it follows a programmed RNA guide to a specific coordinate ✅ *(You answered: {q2})*")
+            st.markdown(f"- **Q3:** Restart production of hemoglobin ✅ *(You answered: {q3})*")
+            
             if score == 3:
                 st.success("Master Scientist! You've successfully navigated the BCL11A edit.")
             else:
-                st.warning("Good attempt! Check your science facts and try again.")
+                st.warning("Good attempt! Review the correct answers above and try again.")
