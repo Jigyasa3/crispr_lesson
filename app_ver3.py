@@ -17,12 +17,11 @@ if 'finished_sim' not in st.session_state:
     st.session_state['finished_sim'] = False
 
 # --- PART 1: THE SEQUENCE ---
-# 20 base pair sequence: "GG" at pos 5-6, and "GG" at pos 19-20. 
-# Length: 4 + 2 + 12 + 2 = 20
-dna_strand = "ATCAGGCATCGATCGATAGG" 
+# 23 base pair sequence: "GG" at pos 3-4, and "GG" at the end (pos 22-23)
+dna_strand = "CAGGCATCGATCGATCGATATGG" 
 
 st.subheader("1. Sickle Cell gene")
-st.write("Here is our target 20-base pair DNA sequence. Notice the specific patterns in the letters!")
+st.write("Here is our target 23-base pair DNA sequence. Notice the specific patterns in the letters!")
 st.code(dna_strand, language="text")
 st.markdown("---")
 
@@ -38,7 +37,7 @@ if pam_answer == "GG":
     st.success("✅ Correct! Cas9 looks for the 'NGG' pattern (ending in GG) to dock onto the DNA.")
     st.session_state['pam_correct'] = True
 elif pam_answer != "Select an option...":
-    st.error("❌ Not quite. Hint: SpCas9 looks for two Guanines next to each other.")
+    st.error("❌ Not quite. Hint: SpCas9 looks for 'NGG' pattern (ending in GG) to dock onto the DNA.")
     st.session_state['pam_correct'] = False
 
 # --- STEP 3: THE gRNA GPS ---
@@ -65,45 +64,46 @@ if st.session_state['grna_correct']:
     st.markdown("---")
     st.subheader("2. Edit Mission")
     
-    st.write("### 📍 Schematic: Where does the GPS gRNA bind?")
+    st.write("### 📍 Where does the GPS gRNA bind?")
     st.write("The gRNA binds to the sequence directly upstream of the final 'GG' landing pad.")
     
-    # Schematic visualization
+    # Visualization with green line
     st.markdown("""
     ```text
-    DNA:      A T C A G G C A T C G A T C G A T A | G G |
-    gRNA GPS: U A G U C C G U A G C U A G C U A U |     |
-                                                  ^ 
-                                              Landing Pad
+    DNA: C A G G C A T C G A T C G A T C G A T A T | G G |
+         |🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩|   ^ 
+         (------- 20 bp perfect match -------)   Landing Pad
     ```
     """)
     
-    st.write("**Goal:** Modify the **'A'** right before the landing pad to trigger the 'switch' for healthy hemoglobin.")
+    st.write("### ✂️ The Molecular Scissors")
+    st.write("Once the gRNA perfectly matches the 20 base pairs, Cas9 acts like scissors and cuts the DNA exactly **3 bases upstream** of the PAM landing pad.")
 
-    # User interaction: Selecting the replacement
-    replacement_base = st.selectbox("Select replacement base to fix the sequence:",["Select...", "A", "T", "C", "G"])
+    # Visualization with Scissors
+    st.markdown("""
+    ```text
+                                   ✂️ Cut site
+    DNA: C A G G C A T C G A T C G A T | C G A T A T | G G |
+         |🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩|   ^ 
+         (------- 20 bp perfect match -------)   Landing Pad
+    ```
+    """)
+    
+    st.write("**Goal:** Use CRISPR to cut the DNA to trigger the 'switch' for healthy hemoglobin.")
 
-    if st.button("Execute CRISPR Edit"):
-        if replacement_base == "Select...":
-            st.warning("Please select a base first!")
-        else:
-            with st.spinner("🤖 CRISPR-Bot performing precision edit..."):
-                time.sleep(1.5) 
-                
-            # Let's say we are targeting the 'A' right before the last GG (which is at index 17, so the 18th base)
-            if replacement_base == "A":
-                st.success("✨ Great, you just edited your first gene!")
-                st.balloons()
-                
-                # Visualize the result highlighting the targeted edit
-                # Changing the last 'A' (at index 17) to show it's edited
-                edited_dna = dna_strand[:17] + "[EDITED-A]" + dna_strand[18:]
-                st.markdown(f"**Updated Sequence Result:** `{edited_dna}`")
-                
-                # Store completion state to trigger the quiz
-                st.session_state['finished_sim'] = True
-            else:
-                st.error(f"❌ Target mismatch. Try again, we can only edit the 'A' in the DNA sequence. You selected '{replacement_base}'.")
+    if st.button("Execute CRISPR Cut"):
+        with st.spinner("🤖 CRISPR-Bot performing precision cut..."):
+            time.sleep(1.5) 
+            
+        st.success("✨ Great, you just cut your first gene!")
+        st.balloons()
+        
+        # Visualize the result showing the cut
+        cut_dna = dna_strand[:17] + "[✂️ CUT] " + dna_strand[17:]
+        st.markdown(f"**Updated Sequence Result:** `{cut_dna}`")
+        
+        # Store completion state to trigger the quiz
+        st.session_state['finished_sim'] = True
 
 # --- PART 2: THE QUIZ MODE ---
 if st.session_state.get('finished_sim'):
@@ -112,8 +112,7 @@ if st.session_state.get('finished_sim'):
     
     with st.form("quiz_form"):
         q1 = st.radio(
-            "1. Which specific gene was targeted in our simulation to help with Sickle Cell Disease?",
-            ["BCL11A", "HBB (Hemoglobin Beta)", "Cas9 Gene"]
+            "1. Which specific gene was targeted in our simulation to help with Sickle Cell Disease?",["BCL11A", "HBB (Hemoglobin Beta)", "Cas9 Gene"]
         )
         
         q2 = st.radio(
@@ -121,8 +120,7 @@ if st.session_state.get('finished_sim'):
         )
         
         q3 = st.radio(
-            "3. Based on clinical trials, this specific CRISPR edit helps the body:",
-            ["Turn off all DNA", "Restart production of fetal hemoglobin", "Change the color of blood"]
+            "3. Based on clinical trials, this specific CRISPR edit helps the body:",["Turn off all DNA", "Restart production of hemoglobin", "Change the color of blood"]
         )
         
         submitted = st.form_submit_button("Submit Answers")
@@ -131,7 +129,7 @@ if st.session_state.get('finished_sim'):
             score = 0
             if q1 == "BCL11A": score += 1
             if q2 == "Because it follows a programmed RNA guide to a specific coordinate": score += 1
-            if q3 == "Restart production of fetal hemoglobin": score += 1
+            if q3 == "Restart production of hemoglobin": score += 1
             
             st.metric("Your STEM Score", f"{score}/3")
             if score == 3:
