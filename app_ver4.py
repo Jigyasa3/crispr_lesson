@@ -105,28 +105,42 @@ if st.session_state['grna_correct']:
     if st.session_state['ai_part1_done']:
         st.markdown("""
         ```text
-        DNA: ...C A T C G A T C G A T C G A T A T G G... C A T C G A T C G A T C G A T A T G G... C A T C G A T C G A T C G A T A T G G...
-                |🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩|       |🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩|       |🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩|
+        Target Site 1:
+        DNA: ... | A G G C A T C G A T C G A T C G A T A T | G G | ...
+                 | 🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩 |   ^ 
+                   (------- 20 bp perfect match -------)   Landing Pad
+        
+        Target Site 2 (Look-alike):
+        DNA: ... | A G G C A T C G A T C G A T C G A T A T | G G | ...
+                 | 🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩 |   ^ 
+                   (------- 20 bp perfect match -------)   Landing Pad
+                   
+        Target Site 3 (Look-alike):
+        DNA: ... | A G G C A T C G A T C G A T C G A T A T | G G | ...
+                 | 🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩 |   ^ 
+                   (------- 20 bp perfect match -------)   Landing Pad
         ```
         """)
         st.error("⚠️ **Danger!** 3 look-alikes present in the human genome. High risk of off-target cutting.")
         
         st.write("### Changing the Landing Pad Rules")
-        st.write("What if we tell our AI to search for a much more complex and unique PAM site, like **NNNNGATT**?")
+        st.write("What if we tell our AI to search for a much more complex and unique PAM site, like **NGATT**?")
         
-        if st.button("Find all PAM sites for gRNA to bind (NNNNGATT)"):
+        if st.button("Find all PAM sites for gRNA to bind (NGATT)"):
             st.session_state['ai_part2_done'] = True
             
     if st.session_state['ai_part2_done']:
         st.markdown("""
         ```text
-        DNA: ...C A T C G A T C G A T C G A T A T G G... C A T C G A T C G A T C G A T A T G G... C A T C G A T C G A T N N N N G A T T...
-                                                                                                                          |🟩🟩🟩🟩🟩🟩🟩🟩|
+        Unique Target Site:
+        DNA: ... | A G G C A T C G A T C G A T C G A T A T | N G A T T | ...
+                 | 🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩 |      ^ 
+                   (------- 20 bp perfect match -------)   Landing Pad
         ```
         """)
         st.success("✨ **Perfect match!** This is a unique site.")
         
-        st.info("**Conclusion:** AI helps us determine the reliability of gRNA, to determine that we don’t accidentally edit another gene causing harmful effects. The scientists use AI to find the correct gRNA and PAM for CRISPR-based gene editing.")
+        st.info("**Conclusion:** AI helps us determine the reliability of gRNA, to determine that we don’t accidentally edit another gene causing harmful effects. Scientists use AI to find the correct gRNA and PAM for CRISPR-based gene editing.")
         
         # Unlock the quiz
         st.session_state['finished_sim'] = True
