@@ -10,14 +10,14 @@ st.write("### Introduction")
 st.write("""
 Think of CRISPR as a highly advanced biological word processor. Just like a computer robot 
 will malfunction if there is a typo in its code, our bodies can face challenges if there are 
-typos in our DNA. CRISPR acts as a smart processor and a pair of 'molecular scissors' 
+typos in our DNA. CRISPR acts as a pair of 'molecular scissors' 
 that can find and fix these genetic typos to keep the system running smoothly.
 """)
 
 # --- 2. FIGURE: CRISPR COMPONENTS ---
 st.info("🧬 **Visualizing the Components**")
-# Displaying the uploaded CRISPR illustration
-st.image("Screenshot1.png", caption="CRISPR Components: The Molecular Scissors and the GPS Guide.")
+# Displaying the uploaded CRISPR illustration without the previous caption
+st.image("Screenshot1.png")
 
 st.markdown("---")
 
@@ -51,8 +51,8 @@ After a lifetime of severe pain and hospital visits, Victoria’s own cells were
 proving that CRISPR can be a functional cure for inherited blood disorders.
 """)
 
-# Displaying the uploaded photo of Victoria Gray
-st.image("Screenshot2.png", caption="Victoria Gray: The first person in the U.S. treated for sickle cell disease using CRISPR.")
+# Displaying the uploaded photo of Victoria Gray without the previous caption
+st.image("Screenshot2.png")
 
 st.markdown("---")
 
@@ -110,7 +110,7 @@ if pam_answer != "Select an option...":
                 
                 if q_gg != "Select...":
                     if q_gg == "3":
-                        st.error("⚠️ **Danger!** There are 3 look-alikes present. This creates a high risk of 'off-target' cutting.")
+                        st.success("✅ This is correct! What does that mean? Danger, there are 3 look-alikes present. This creates a high risk of 'off-target' cutting.")
                         
                         st.subheader("Changing the Landing Pad Rules")
                         st.write("What if we use AI to find a more complex and unique landing pad, like **GATT**?")
@@ -143,7 +143,7 @@ if pam_answer != "Select an option...":
                                     if submitted:
                                         score = 0
                                         if q2 == "Because it is a molecular scissors.": score += 1
-                                        score += 2 # Q2 and Q3 are always correct per instructions
+                                        score += 2 # Q2 and Q3 are always correct
                                         
                                         st.metric("Your STEM Score", f"{score}/3")
                                         
