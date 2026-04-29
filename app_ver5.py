@@ -17,7 +17,7 @@ that can find and fix these genetic typos to keep the system running smoothly.
 # --- 2. FIGURE: CRISPR COMPONENTS ---
 st.info("🧬 **Visualizing the Components**")
 # Displaying the uploaded CRISPR illustration
-st.image("Screenshot 2026-04-28 at 8.59.27 PM.png", caption="CRISPR Components: The Molecular Scissors and the GPS Guide.")
+st.image("Screenshot1.png", caption="CRISPR Components: The Molecular Scissors and the GPS Guide.")
 
 st.markdown("---")
 
@@ -52,7 +52,7 @@ proving that CRISPR can be a functional cure for inherited blood disorders.
 """)
 
 # Displaying the uploaded photo of Victoria Gray
-st.image("Screenshot 2026-04-28 at 8.59.44 PM.png", caption="Victoria Gray: The first person in the U.S. treated for sickle cell disease using CRISPR.")
+st.image("Screenshot2.png", caption="Victoria Gray: The first person in the U.S. treated for sickle cell disease using CRISPR.")
 
 st.markdown("---")
 
